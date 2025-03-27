@@ -1,0 +1,24 @@
+version: '3.8' # Docker Composeファイルのバージョン
+
+services: # コンテナ化するサービスを定義するセクション
+  main:
+    image: openscene # 利用するimageの指定
+    build:
+      context: . # imageをビルドするディレクトリの指定
+    container_name: openscene # 作成するコンテナ名
+    stdin_open: true
+    volumes:
+      - .:/3dc_ov
+      # データセットのマウント
+      - /mnt/data/ScanRefer:/openscene/data/ScanRefer
+      - /mnt/data/ScanNetv2:/openscene/data/ScanNetv2
+      - ~/dataset/scannet_multiview_lseg:/openscene/data/scannet_multiview_lseg
+      - ~/dataset/scannet_multiview_openseg:/openscene/data/scannet_multiview_openseg
+    shm_size: '8gb'
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: 'nvidia'
+              capabilities: [ gpu ]
